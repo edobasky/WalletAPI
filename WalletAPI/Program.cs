@@ -1,4 +1,8 @@
 
+using WalletAPI.Context;
+using Microsoft.EntityFrameworkCore;
+using WalletAPI.ServiceCollections;
+
 namespace WalletAPI
 {
     public class Program
@@ -8,7 +12,10 @@ namespace WalletAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.ConfigureAccountServices(builder.Configuration);
+            var ConnectionString = builder.Configuration.GetConnectionString("sqlConnection");
 
+            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(ConnectionString,options => options.EnableRetryOnFailure()));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
