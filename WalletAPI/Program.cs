@@ -2,6 +2,7 @@
 using WalletAPI.Context;
 using Microsoft.EntityFrameworkCore;
 using WalletAPI.ServiceCollections;
+using WalletAPI.Utilities;
 
 namespace WalletAPI
 {
@@ -20,6 +21,9 @@ namespace WalletAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var appSettingsSection = builder.Configuration.GetSection("AppSettings");
+            builder.Services.Configure<AppSettings>(appSettingsSection);
 
             var app = builder.Build();
 

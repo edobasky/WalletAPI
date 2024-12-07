@@ -11,7 +11,7 @@ namespace WalletAPI.ServiceCollections
         public static IServiceCollection ConfigureAccountServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAccountService,AccountService>();
-
+            services.AddScoped<IJwtTokenManagerService, JwtTokenManagerService>();
             #region Identity
             services.AddIdentityCore<User>();
             services.AddIdentity<User, IdentityRole>(options =>
@@ -35,9 +35,15 @@ namespace WalletAPI.ServiceCollections
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
-                options.User.AllowedUserNameCharacters = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM-._@+";
+                options.User.AllowedUserNameCharacters = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM-._@+1234567890";
 
             });
+            #endregion
+
+            #region Jwt
+            var secretKey = configuration.GetSection("AppSettings:Jwt").GetValue<string>("SecretKey");
+            var secretKey = configuration.GetSection("AppSettings:Jwt").GetValue<string>("SecretKey");
+            var secretKey = configuration.GetSection("AppSettings:Jwt").GetValue<string>("SecretKey");
             #endregion
 
             return services;

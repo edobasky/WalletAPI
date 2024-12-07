@@ -27,5 +27,15 @@ namespace WalletAPI.Controllers
             return StatusCode(serviceResponse.StatusCode, serviceResponse);
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginIntoAccount([FromBody] LoginDto accountDto)
+        {
+            var serviceResponse = new ServiceResponse<dynamic>();
+
+            serviceResponse = await _accountService.LoginAsync(accountDto);
+
+            return StatusCode(serviceResponse.StatusCode, serviceResponse);
+        }
+
     }
 }
