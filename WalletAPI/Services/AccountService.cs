@@ -11,10 +11,13 @@ namespace WalletAPI.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IJwtTokenManagerService _jwtTokenManagerService;
+
+        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager,IJwtTokenManagerService jwtTokenManagerService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _jwtTokenManagerService = jwtTokenManagerService;
         }
 
         public async Task<ServiceResponse<dynamic>> CreateAccountAsync(CreateAccountDto userCreate)
@@ -120,9 +123,11 @@ namespace WalletAPI.Services
                     return serviceResponse;
                 }
 
+                var token = await _jwtTokenManagerService.GenerateJwtToken(new GenerateJwtTokenDto(isUserExist.Email, isUserExist.FirstName, isUserExist.LastName));
                 serviceResponse.Message = "Login Successful";
                 serviceResponse.StatusCode= (int)HttpStatusCode.OK;
                 serviceResponse.Success = true;
+                serviceResponse.Data = new { Token = token };
             }
             catch (Exception)
             {
